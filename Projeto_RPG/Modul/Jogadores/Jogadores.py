@@ -1,3 +1,4 @@
+            # Programação Orientada ao Objeto
 from random import choice , randint
 
 class Jogador: #Criamos a classe jogador para colocar as variaveis : nome , nivel , hp e dano
@@ -53,4 +54,5 @@ def main():
     
 
 if __name__ == "__main__": #Executar tudo
+
     main()
