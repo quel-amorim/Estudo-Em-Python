@@ -1,3 +1,4 @@
+            #Testando como fazer o programa Orientado ao Objeto
 from random import choice , randint
 
 class Mob: # Aqui apenas crio class mob ja com as variaveis que eu deseja
@@ -53,4 +54,5 @@ def main(): # Aqui é onde fica as interações do programa
             continue
 
 if __name__ == "__main__": # Executa a função main do programa
+
     main()
