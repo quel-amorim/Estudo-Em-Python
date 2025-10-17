@@ -1,100 +1,123 @@
-                                    #Versão 03 => Orientada ao Objeto
-# Criação de classes
+                    # Versão com SQLite(Banco de dados)
+import sqlite3
 from random import randint
-#Na class Contato apenas crio as variaveis nome,email,telefone
-class Contato:
 
-    def __init__(self,nome,email,telefone):
+# === Classe Contato ===
+class Contato:
+    def __init__(self, nome, email, telefone):
         self.nome = nome
         self.email = email
         self.telefone = telefone
-    
-    #Aqui ele vai me mostra o resultado
+
     def __str__(self):
-        return f'Nome : {self.nome}  | Email : {self.email}  | Telefone : {self.telefone}'
+        return f'Nome : {self.nome} | Email : {self.email} | Telefone : {self.telefone}'
 
-# Aqui faço as criações da lista de contato , das funções de criar , consultar , deletar e mostrar todos os contatos
+
+# === Classe Agenda ===
 class Agenda:
-    def __init__(self):
-        self.contatos = []
-    
+    def __init__(self, banco="agenda.db"):
+        self.banco = banco
+        self.conexao = sqlite3.connect(self.banco)
+        self.cursor = self.conexao.cursor()
+        self.criar_tabela()
+
+    # Cria a tabela se não existir
+    def criar_tabela(self):
+        self.cursor.execute("""
+            CREATE TABLE IF NOT EXISTS contatos (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nome TEXT NOT NULL,
+                email TEXT,
+                telefone TEXT
+            )
+        """)
+        self.conexao.commit()
+
+    # Adiciona um novo contato
     def adicionar_contato(self):
-        nome = input('Nome para salvar ')
-        ddd = randint(11 , 99)
-        cell = randint(0 , 99999999)
-        telefone = f'+55 ({ddd:02d}) 9{cell:08d}'
-        email = input('Email : ')
-        novo = Contato(nome , email , telefone)
-        self.contatos.append(novo)
-        print(f'Contato : {nome} adicionado com sucesso !')
-    
+        nome = input("Nome: ").strip()
+        ddd = randint(11, 99)
+        cell = randint(0, 99999999)
+        telefone = f"+55 ({ddd:02d}) 9{cell:08d}"
+        email = input("Email: ").strip()
+
+        self.cursor.execute(
+            "INSERT INTO contatos (nome, email, telefone) VALUES (?, ?, ?)",
+            (nome, email, telefone)
+        )
+        self.conexao.commit()
+        print(f"Contato '{nome}' adicionado com sucesso!")
+
+    # Consulta contato
     def consultar_contato(self):
-        if not self.contatos:
-            print('Nada salvo')
-            return
-        
-        tipo = input('Buscar por nome , email ou telefone : ').lower().strip()
-        valor = input('Digite o valor da busca : ').strip()
-        encontra = False
+        tipo = input("Buscar por nome, email ou telefone: ").lower().strip()
+        valor = input("Digite o valor da busca: ").strip()
 
-        for contatos in self.contatos:
-            if((tipo == 'nome' and contatos.nome == valor)or
-               (tipo =='email' and contatos.email == valor)or
-               (tipo =='telefone' and contatos.telefone == valor)):
-                print(f'Contato encontrado : {contatos}')
-                encontra = True
-                break
-        
-        if not encontra:
-            print('Contato não encontrado !')
-        
+        if tipo not in ["nome", "email", "telefone"]:
+            print("Tipo inválido! Use nome, email ou telefone.")
+            return
+
+        query = f"SELECT nome, email, telefone FROM contatos WHERE {tipo} = ?"
+        self.cursor.execute(query, (valor,))
+        resultado = self.cursor.fetchone()
+
+        if resultado:
+            contato = Contato(*resultado)
+            print(f"Contato encontrado:\n{contato}")
+        else:
+            print("Contato não encontrado!")
+
+    # Deletar contato
     def deletar_contato(self):
-        if not self.contatos:
-            print('Nenhum contato salvo!')
+        nome = input("Digite o nome do contato que deseja deletar: ").strip()
+
+        self.cursor.execute("SELECT * FROM contatos WHERE nome = ?", (nome,))
+        if not self.cursor.fetchone():
+            print("Contato não encontrado!")
             return
 
-        nome = input('Digite o nome do contato que deseja deletar: ')
-        for contato in self.contatos:
-            if contato.nome == nome:
-                self.contatos.remove(contato)
-                print(f'Contato "{nome}" removido com sucesso!')
-                break
-        else:
-            print('Contato não encontrado!')
-    
-    def listar_contatos(self):
-        if not self.contatos:
-            print('Nenhum contato salvo!')
-        else:
-            print('\n--- Lista de Contatos ---')
-            for i, contato in enumerate(self.contatos, start=1):
-                print(f"{i}. {contato}")
-    
-#Programa principal
+        self.cursor.execute("DELETE FROM contatos WHERE nome = ?", (nome,))
+        self.conexao.commit()
+        print(f"Contato '{nome}' removido com sucesso!")
 
+    # Listar todos os contatos
+    def listar_contatos(self):
+        self.cursor.execute("SELECT nome, email, telefone FROM contatos")
+        contatos = self.cursor.fetchall()
+
+        if not contatos:
+            print("Nenhum contato salvo!")
+        else:
+            print("\n--- Lista de Contatos ---")
+            for i, (nome, email, telefone) in enumerate(contatos, start=1):
+                print(f"{i}. Nome: {nome} | Email: {email} | Telefone: {telefone}")
+
+    # Fecha a conexão com o banco (boa prática)
+    def fechar(self):
+        self.conexao.close()
+
+
+# === Função Principal ===
 def main():
     agenda = Agenda()
 
-    texto_inicio = ' Bem-vindo ao seu teste de um Banco de Dados (versão POO) '
-    print('-' * len(texto_inicio))
-    print(texto_inicio)
-    print('-' * len(texto_inicio))
+    print("-" * 60)
+    print(" Bem-vindo ao Sistema de Agenda com Banco de Dados (SQLite) ")
+    print("-" * 60)
 
     while True:
-        print('\nOpções do sistema')
-        print('-=-' * 10)
-        
-        print('[1] Criar Contato')
-        print('[2] Consultar Contato')
-        print('[3] Deletar Contato')
-        print('[4] Mostrar todos os Contatos')
-        print('[5] Sair')
-        
+        print("\nOpções do Sistema")
+        print("-=-" * 10)
+        print("[1] Criar Contato")
+        print("[2] Consultar Contato")
+        print("[3] Deletar Contato")
+        print("[4] Mostrar todos os Contatos")
+        print("[5] Sair")
 
         try:
-            escolha = int(input('Escolha: '))
+            escolha = int(input("Escolha: "))
         except ValueError:
-            print('Erro: apenas números são permitidos!')
+            print("Erro: apenas números!")
             continue
 
         if escolha == 1:
@@ -106,10 +129,11 @@ def main():
         elif escolha == 4:
             agenda.listar_contatos()
         elif escolha == 5:
-            print('Saindo do sistema... Fim!')
+            agenda.fechar()
+            print("Saindo do sistema... Fim!")
             break
         else:
-            print('Opção desconhecida, tente novamente!')
+            print("Opção inválida! Tente novamente.")
 
 
 if __name__ == "__main__":
