@@ -1,0 +1,27 @@
+body{
+    background: azure;
+    font-family: "Press Start 2P", system-ui;
+    font-weight: 400;
+    font-style: normal;
+}
+h1{
+    color: gold;
+    text-align: center;
+}
+#souls_games{
+    color:blueviolet;
+    border: solid 3px black;
+    margin: 10px;
+    padding: 50px;
+    color : whitesmoke;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#b_ds1 , #b_ds2 ,#b_ds3{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin : 20px;
+    padding: 50px;
+}

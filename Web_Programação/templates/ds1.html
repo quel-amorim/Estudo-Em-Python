@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Souls 1 Remaker</title>
+</head>
+<body>
+    <style>
+        body{
+        background: azure;
+        font-family: "Press Start 2P", system-ui;
+        font-weight: 300;
+        font-style: normal;
+        }
+        h1{
+            color:rgb(238, 84, 24);
+        }
+        p{
+            color: skyblue;
+        }
+    </style>
+    <a href="{{ url_for('iniciar') }}"><button><h2>Voltar Index</h2></button></a>
+    <h1>História do Jogo</h1>
+    <p>“Na era dos antepassados, o mundo era disforme, cercado por uma densa névoa. Uma terra de desfiladeiros cinzentos, árvores colossais e dragões perpétuos. </p>
+    <img src="{{ url_for('static', filename='imagens/Furtive_Pygmy.webp') }}" alt="primeira_chama" width="600" height="400">
+
+</body>
+</html>

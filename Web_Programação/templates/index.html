@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Web Programação</title>
+</head>
+<body>
+    <h1>Hello World</h1>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit...</p>
+
+    <div id="souls_games">
+        <ul>
+            <h1>Jogos Souls</h1>
+
+            <h1 style="color: orangered;">Dark Souls 1 Remake</h1>
+            <a href="{{ url_for('ds1') }}">
+                <button id="b_ds1">
+                    <img src="{{ url_for('static', filename='imagens/ds1.jpg') }}" alt="img_ds1" width="1024" height="720">
+                </button>
+            </a>
+
+            <h1 style="color: plum;">Dark Souls 2</h1>
+            <a href="{{ url_for('ds2') }}">
+                <button id="b_ds2">
+                    <img src="{{ url_for('static', filename='imagens/ds2.avif') }}" alt="img_ds2" width="1024" height="720">
+                </button>
+            </a>
+
+            <h1 style="color: blueviolet;">Dark Souls 3</h1>
+            <a href="{{ url_for('ds3') }}">
+                <button id="b_ds3">
+                    <img src="{{ url_for('static', filename='imagens/ds3.webp') }}" alt="img_ds3" width="1024" height="720">
+                </button>
+            </a>
+        </ul>
+    </div>
+</body>
+</html>
