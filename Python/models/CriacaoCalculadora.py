@@ -1,69 +1,85 @@
 class Calculadora:
     def __init__(self):
-        self.num1 = 0
-        self.num2 = 0
-
-    def pegar_valores(self):
+        self.H = []
+    
+    def valores(self):
         while True:
             try:
-                self.num1 = float(input('Primeiro valor: '))
-                self.num2 = float(input('Segundo valor: '))
+                self.n1 = float(input('1 ° número :'))
+                self.n2 = float(input('2 ° número :'))
                 break
             except ValueError:
-                print("Erro! Digite apenas números.")
+                print('Erro de digitação !')
+                continue
+    
+    def atralhos(self):
+        print('[1] Somar')
+        print('[2] Subtrair')
+        print('[3] Divisão')
+        print('[4] Multiplicação')
+        print('[5] Trocar valores')
+        print('[6] Todas operações')
+        print('[0] Sair')
+    
+    def somar(self):
+        r = self.n1 + self.n2
+        print(f'{self.n1} + {self.n2} = {r}')
+        return r
 
-    def rodar_calculadora(self):
-        print('-' * 20)
-        print('Bem-vindo ao programa da Calculadora')
-        print('-' * 20)
-
-        self.pegar_valores()
-
+    def sub(self):
+        r = self.n1 - self.n2
+        print(f'{self.n1} - {self.n2} = {r}')
+        return r
+    
+    def div(self):
+        if self.n2 == 0:
+            print('Divisão por zero !')
+        else:
+            r = self.n1 / self.n2
+            print(f'{self.n1} / {self.n2} = {r}')
+            return r
+    
+    def mult(self):
+        r = self.n1 * self.n2
+        print(f'{self.n1} x {self.n2} = {r}')
+        return r
+    
+    def todas(self):
+        print('\nTodas Operações')
+        dados = {
+        "Soma" : self.somar(),
+        "Sub" : self.sub(),
+        "Divisão" : self.div(),
+        "Multiplicação" : self.mult()
+        }
+        self.H.append(dados)
+        for _ , d in enumerate(self.H , start=1):
+            print(d)
+        
+    def menu(self):
+        print('-=-'*10)
+        print('Menu do Programa Calculadora')
+        print('-=-'*10)
+        self.valores() # pegar valores antes de começar as operaçoes
+        print('OPERAÇÕES REGISTRADAS')
+        print('-'*10)
         while True:
-            print('\n[1] somar')
-            print('[2] diminuir')
-            print('[3] divisão')
-            print('[4] multiplicar')
-            print('[5] todas operações')
-            print('[6] trocar valores')
-            print('[0] sair')
-
-            escolha = input("\nEscolha: ")
-
+            self.atralhos() # atralhos registrados
+            escolha = input('Escolha :')
+            
             match escolha:
                 case "1":
                     self.somar()
                 case "2":
-                    self.diminuir()
+                    self.sub()
                 case "3":
-                    self.divi()
+                    self.div()
                 case "4":
                     self.mult()
                 case "5":
-                    self.somar()
-                    self.diminuir()
-                    self.divi()
-                    self.mult()
+                    self.valores()
                 case "6":
-                    self.pegar_valores()
+                    self.todas()
                 case "0":
-                    print('Fim.')
+                    print('--- Fim ---')
                     break
-                case _:
-                    print('Opção inválida.')
-
-    def somar(self):
-        print(f'{self.num1} + {self.num2} = {self.num1 + self.num2}')
-
-    def diminuir(self):
-        print(f'{self.num1} - {self.num2} = {self.num1 - self.num2}')
-
-    def divi(self):
-        if self.num2 != 0:
-            print(f'{self.num1} / {self.num2} = {self.num1 / self.num2}')
-        else:
-            print('Erro: divisão por zero!')
-
-    def mult(self):
-        print(f'{self.num1} x {self.num2} = {self.num1 * self.num2}')
-
