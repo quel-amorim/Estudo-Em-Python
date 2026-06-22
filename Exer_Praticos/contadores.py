@@ -6,7 +6,7 @@ def roleta_números():
     pares = []
     impares = []
     qts = int(input("X vezes que vai criar números ? "))
-    for i in range(1 , qts+1):
+    for _ in range(1 , qts+1):
         roleta = randint(0 , 1000)
         if roleta % 2 == 0:
             numeros_pares +=1
