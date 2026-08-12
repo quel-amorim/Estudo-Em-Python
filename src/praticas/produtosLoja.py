@@ -8,8 +8,8 @@ class Produto:
         self.quantidade = quantidade
         self.fornecedor = fornecedor
 
-    def __repr__(self):
-        print(f'ID#{self.identificacao} | {self.nome} Catégoria : {self.categoria} R${self.valor} Quantidade :{self.quantidade} -> Distribuidora : {self.fornecedor}')
+    def __str__(self):
+        return f'ID#{self.identificacao} | {self.nome} Catégoria : {self.categoria} R${self.valor} Quantidade :{self.quantidade} -> Distribuidora : {self.fornecedor}'
 
 
 itens01 = Produto('AMD Ryzen 5 4600G','HARDWARE',700,100,'AMD')
@@ -25,16 +25,16 @@ class Gerenciamento:
         modelo = input('Escolha :')
         match (modelo):
             case '1':
-                for filtroN in self.produtosListados['nome']:
-                    print(filtroN)
+                for filtroN in self.produtosListados:
+                    print(filtroN.nome)
 
             case '2':
-                for filtroC in self.produtosListados['categoria']:
-                    print(filtroC)
+                for filtroC in self.produtosListados:
+                    print(filtroC.categoria)
 
             case '3':
-                for filtroD in self.produtosListados['forcedor']:
-                    print(filtroD)
+                for filtroD in self.produtosListados:
+                    print(filtroD.fornecedor)
 
     def exibicao(self):
         for produto in self.produtosListados:
