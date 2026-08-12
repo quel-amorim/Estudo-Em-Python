@@ -8,10 +8,8 @@ class Conta:
         self.valor = valor
         self.dataVencimento = dataVencimento
 
-#Contas já definidas
 luz = Conta('Conta de LUZ',178.99,'14/07/2026')
 agua = Conta('Conta de Agua',159.89,'10/06/2026')
-#Contas interativas
 
 class Gerenciar:
     def __init__(self):
