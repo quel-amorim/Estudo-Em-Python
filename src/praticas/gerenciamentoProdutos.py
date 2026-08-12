@@ -8,13 +8,11 @@ class Produto:
         self.quantidade = quantidade
         self.fornecedor = fornecedor
 
-    def __str__(self):
-        return f'ID#{self.identificacao} | {self.nome} Catégoria : {self.categoria} R${self.valor} Quantidade :{self.quantidade} -> Distribuidora : {self.fornecedor}'
 
 
 itens01 = Produto('AMD Ryzen 5 4600G','HARDWARE',700,100,'AMD')
 itens02 = Produto('NVIDIA GTX 1650 4GB','HARDWARE',1500,20,'NVIDIA')
-itens03 = Produto('Ração de Calopsita','ALIMENTO',29.90,1000,'ATACADAO')
+itens03 = Produto('Ração de Calopsita','ALIMENTO',29.99,1000,'ATACADAO')
 
 class Gerenciamento:
     def __init__(self):
@@ -38,7 +36,7 @@ class Gerenciamento:
 
     def exibicao(self):
         for produto in self.produtosListados:
-            print(produto)
+            print('° ',produto.nome ,'R$', produto.valor , 'Distribuidora', produto.fornecedor)
 
 def main():
     gerente = Gerenciamento()
