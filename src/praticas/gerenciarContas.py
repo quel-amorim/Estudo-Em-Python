@@ -30,35 +30,95 @@ class Loja:
     def __init__(self):
         self.listaprodutos = []
 
-    def criar(self,x):
+    def criar(self, x):
+        sugestao = ['Roupas', 'Eletronico', 'Alimento', 'Remedio', 'Cafe']
+
         for _ in range(x):
-            sugestao = ['Roupas','Eletronico','Alimento','Remedio','Cafe']
-            id = 1
+            id = len(self.listaprodutos) + 1
             nome = choice(sugestao)
-            valor = round(uniform(10 , 500), 2)
-            quantidade = randint(0 , 100)
+            valor = round(uniform(10, 500), 2)
+            quantidade = randint(0, 100)
             data = datetime.now()
             vencimentoproduto = data + timedelta(days=60)
-            produto = {'id' : id , 'nome': nome,'valor':valor,'quantidade':quantidade,
-                       'data':vencimentoproduto.strftime('%d/%m/%Y')}
-            self.listaprodutos.append(produto)
-            id +=1
 
-        print('Criação de {} na lista de produtos'.format(x))
-        self.salvarprodutos()
+            produto = {
+                'id': id,
+                'nome': nome,
+                'valor': valor,
+                'quantidade': quantidade,
+                'data': vencimentoproduto.strftime('%d/%m/%Y')
+            }
+
+            self.listaprodutos.append(produto)
+
+        print(f'Criação de {x} produtos na lista')
 
     def salvarprodutos(self):
-        with open('produtos.json','w') as arquivo_json:
-            json.dump(self.listaprodutos,arquivo_json)
+        with open('produtos.json', 'w') as arquivo_json:
+            json.dump(self.listaprodutos, arquivo_json, indent=4)
 
     def exibir(self):
         for y in self.listaprodutos:
-            print(f'{y['id']} ->{y['nome']} R${y['valor']}, QTS {y['quantidade']} VENCIMENTO PRODUTO {y['data']}')
+            print(
+                f"{y['id']} -> {y['nome']} "
+                f"R${y['valor']}, "
+                f"QTS {y['quantidade']} "
+                f"VENCIMENTO PRODUTO {y['data']}"
+            )
 
     def exibir02(self):
-        with open('produtos.json','r') as arquivo_json:
-            self.listaprodutos = json.load(arquivo_json)
-            print(self.listaprodutos)
+        try:
+            with open('produtos.json', 'r') as arquivo_json:
+                self.listaprodutos = json.load(arquivo_json)
+
+            self.exibir()
+
+        except FileNotFoundError:
+            print('Nenhum arquivo de produtos foi encontrado!')
 
     def remover(self):
-        pass
+        remocaoID = int(input('Quer remover qual produto pelo ID? '))
+
+        for produto in self.listaprodutos:
+            if produto['id'] == remocaoID:
+                self.listaprodutos.remove(produto)
+                print(f'Produto de ID {remocaoID} removido com sucesso!')
+                return
+
+        print('Produto não encontrado!')
+
+
+teste01 = Loja()
+
+while True:
+    print('=' * 10)
+    print('Menu de Opções')
+    print('=' * 10)
+    print('1. Criação de Produtos')
+    print('2. Salvar Produtos criados')
+    print('3. Exibir Produtos')
+    print('4. Remoção de Produtos por ID')
+    print('0. Sair')
+
+    escolha = input('Escolha agora! : ')
+
+    match escolha:
+        case '1':
+            teste01.criar(10)
+
+        case '2':
+            teste01.salvarprodutos()
+            print('Produtos salvos com sucesso!')
+
+        case '3':
+            teste01.exibir02()
+
+        case '4':
+            teste01.remover()
+
+        case '0':
+            print('Fechando Aplicação')
+            break
+
+        case _:
+            print('Opção inválida!')
