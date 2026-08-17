@@ -11,6 +11,13 @@ class Personagem:
         self.resister = resister
         self.atributos = {'STR' : self.forca,'INT' : self.intl,'AGLI' : self.agli,'RESIST' : self.resister}
         self.elemento = elemento
+        # Status
+        self.vida = (100 * self.hp) / 2
+        self.Mana = (100* self.mana) /2
+        self.ataque = 100 *self.forca
+        self.defesas = 100 * self.resister
+        self.inteligencia = 5 * self.intl
+        self.agilidade = 5 * self.agli
 
     def exibir_atributos(self):
         print(f"--- Atributos de {self.nome} ---")
@@ -20,6 +27,16 @@ class Personagem:
         for attr, valor in self.atributos.items():
             print(f"  {attr}: {valor}")
         print("-" * 30)
+
+    def status(self):
+
+        print(f''' CLASSE {self.nome}   
+        HP : {self.vida}  MANA : {self.Mana}
+        Dano : {self.ataque}
+        Defesa : {self.defesas}
+        CRT : {self.inteligencia} %
+        ENV : {self.agilidade} %
+        ''')
 
     def __repr__(self):
         return f'{self.nome} / {self.nivel}'
@@ -81,7 +98,9 @@ class Listar:
 
 def main():
     listagem = Listar()
-    listagem.filtrar()
+    l1 = Lutador()
+
+    l1.status()
 
 if __name__ == '__main__':
     main()
