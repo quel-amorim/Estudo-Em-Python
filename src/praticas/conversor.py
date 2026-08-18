@@ -27,8 +27,7 @@ fahre = (numero * 1.8) + 32
 quilometro = numero / 1000
 
 print('\nCelsius ----- Fahrenheit')
-print(numero , "°C")
-print(fahre, "°F")
+print(numero , "°C" , '------' , fahre, "°F")
+print()
 print('\nMetros --- Quilometros')
-print(numero ,"metros")
-print(quilometro,"quilometros")
+print(numero ,"metros" , '-----' , quilometro,"quilometros")
