@@ -31,7 +31,6 @@ class Calculadora:
         if self.n2 == 0:
             print('Não é possível dividir por zero!')
             return
-
         operacao = f'{self.n1} / {self.n2} = {self.n1 / self.n2}'
         print(operacao)
         self.salvar_historico(operacao)
