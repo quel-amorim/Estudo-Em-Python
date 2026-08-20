@@ -6,6 +6,7 @@ class Agenda:
         self.lista = []
         self.numeroid = 1
         self.variantes_email = ['@gmail.com','@hotmail.com','@yahoo.com']
+        self.carregarjson()
 
     def criarcontato(self):
         while True:
@@ -20,12 +21,13 @@ class Agenda:
                 print('Volte ao começo')
                 continue
 
-        for _ in range(x):
+        for i in range(x):
             nome = input('Informe o nome do contato:')
-            n1 = str(randint(0,9999))
-            n2 = str(randint(0,9999))
+            #arrumar a variavel que define o telefone
+            n1 = str(randint(1,9999))
+            n2 = str(randint(1,9999))
             telefone = f'+55 9{n1}-{n2}'
-            email = f'teste{x}',choice(self.variantes_email)
+            email = f'teste#{i}{choice(self.variantes_email)}'
             contato = {
                 'id' : self.numeroid,
                 'nome' : nome,
@@ -43,24 +45,50 @@ class Agenda:
 
     def exibir(self):
         for contato in self.lista:
-            print(f'{contato['nome']} -> {contato["telefone"]} | {contato["email"]}')
+            print(f'{contato['id']}°{contato['nome']} -> {contato["telefone"]} | {contato["email"]}')
 
     def buscar(self):
-        buscando = input('Informe o nome do contato:')
-        for buscar in self.lista:
-            if buscar['nome'] == buscando:
-                print(f'{buscando} -> {buscar}')
+        buscando = input('Informe o nome do contato: ')
+        encontrado = False
+        for contato in self.lista:
+            if contato['nome'].lower() == buscando.lower():
+                print(f"{contato['nome']} -> {contato['telefone']} ")
+                encontrado = True
 
-            if buscar['nome'] not in self.lista:
-                print('Esse nome não está listado' , buscando)
+        if not encontrado:
+            print('Contato não encontrado.')
 
     def remover(self):
-        IDremover = int(input('Informe o ID do contato:'))
-        for remover in self.lista:
-            if remover['id'] == IDremover:
-                self.lista.remove(remover)
-                print('ID#', IDremover ,'removido com sucesso !')
+        try:
+            IDremover = int(input('Informe o ID do contato: '))
+        except ValueError:
+            print('Informe um ID válido.')
+            return
+        for contato in self.lista:
+            if contato['id'] == IDremover:
+                self.lista.remove(contato)
                 self.salvar()
+                print(f'ID #{IDremover} removido com sucesso!')
+                return
+
+        print('ID não encontrado.')
+
+    def carregarjson(self):
+        try:
+            with open('contatos.json', 'r', encoding='utf-8') as arquivo:
+                self.lista = json.load(arquivo)
+
+            if self.lista:
+                self.numeroid = max(contato['id'] for contato in self.lista) + 1
+            else:
+                self.numeroid = 1
+
+            print('Contatos carregados com sucesso!')
+
+        except FileNotFoundError:
+            print('Arquivo contatos.json não encontrado.')
+            self.lista = []
+            self.numeroid = 1
 
 def main():
     telefone = Agenda()
