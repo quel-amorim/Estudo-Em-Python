@@ -23,10 +23,9 @@ class Agenda:
 
         for i in range(x):
             nome = input('Informe o nome do contato:')
-            #arrumar a variavel que define o telefone
-            n1 = str(randint(1,9999))
-            n2 = str(randint(1,9999))
-            telefone = f'+55 9{n1}-{n2}'
+            numero = randint(900000000, 999999999)
+            numero_str = str(numero)
+            telefone = f'+55 9 {numero_str[:5]}-{numero_str[5:]}'
             email = f'teste#{i}{choice(self.variantes_email)}'
             contato = {
                 'id' : self.numeroid,
@@ -73,17 +72,15 @@ class Agenda:
 
         print('ID não encontrado.')
 
+        for indice, contato in enumerate(self.lista, start=1):
+            contato["id"] = indice
+
+        self.numeroid = len(self.lista) +1
+
     def carregarjson(self):
         try:
             with open('contatos.json', 'r', encoding='utf-8') as arquivo:
                 self.lista = json.load(arquivo)
-
-            if self.lista:
-                self.numeroid = max(contato['id'] for contato in self.lista) + 1
-            else:
-                self.numeroid = 1
-
-            print('Contatos carregados com sucesso!')
 
         except FileNotFoundError:
             print('Arquivo contatos.json não encontrado.')
