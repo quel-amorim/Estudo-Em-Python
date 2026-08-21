@@ -1,122 +1,161 @@
 import json
-from random import randint , choice
+from random import randint, choice
+
 
 class Agenda:
     def __init__(self):
         self.lista = []
-        self.numeroid = 1
-        self.variantes_email = ['@gmail.com','@hotmail.com','@yahoo.com']
-        self.carregarjson()
+        self.variantes_email = ["@gmail.com","@hotmail.com","@yahoo.com"]
+        self.carregar_json()
 
-    def criarcontato(self):
-        while True:
-            try:
-                x = int(input('Vamos adicionar quantos contatos?'))
-                if x < 0:
-                    print('Não é permitido deixar valor zero')
-                    continue
-
-                break
-            except ValueError:
-                print('Volte ao começo')
-                continue
-
-        for i in range(x):
-            nome = input('Informe o nome do contato:')
-            numero = randint(900000000, 999999999)
-            numero_str = str(numero)
-            telefone = f'+55 9 {numero_str[:5]}-{numero_str[5:]}'
-            email = f'teste#{i}{choice(self.variantes_email)}'
-            contato = {
-                'id' : self.numeroid,
-                'nome' : nome,
-                'email': email,
-                'telefone': telefone
-            }
-            self.numeroid +=1
-            self.lista.append(contato)
-
-        print('Contatos adcionados com sucesso !')
-
-    def salvar(self):
-        with open('contatos.json','w') as arquivo:
-            json.dump(self.lista,arquivo,indent=4,ensure_ascii=False)
-
-    def exibir(self):
-        for contato in self.lista:
-            print(f'{contato['id']}°{contato['nome']} -> {contato["telefone"]} | {contato["email"]}')
-
-    def buscar(self):
-        buscando = input('Informe o nome do contato: ')
-        encontrado = False
-        for contato in self.lista:
-            if contato['nome'].lower() == buscando.lower():
-                print(f"{contato['nome']} -> {contato['telefone']} ")
-                encontrado = True
-
-        if not encontrado:
-            print('Contato não encontrado.')
-
-    def remover(self):
+    def carregar_json(self):
         try:
-            IDremover = int(input('Informe o ID do contato: '))
-        except ValueError:
-            print('Informe um ID válido.')
-            return
-        for contato in self.lista:
-            if contato['id'] == IDremover:
-                self.lista.remove(contato)
-                self.salvar()
-                print(f'ID #{IDremover} removido com sucesso!')
-                return
-
-        print('ID não encontrado.')
-
-        for indice, contato in enumerate(self.lista, start=1):
-            contato["id"] = indice
-
-        self.numeroid = len(self.lista) +1
-
-    def carregarjson(self):
-        try:
-            with open('contatos.json', 'r', encoding='utf-8') as arquivo:
+            with open("agendacontatos.json", "r", encoding="utf-8") as arquivo:
                 self.lista = json.load(arquivo)
 
         except FileNotFoundError:
-            print('Arquivo contatos.json não encontrado.')
             self.lista = []
-            self.numeroid = 1
+
+    def salvar_json(self):
+        with open("agendacontatos.json", "w", encoding="utf-8") as arquivo:
+            json.dump(self.lista,arquivo,indent=4,ensure_ascii=False)
+
+    def gerar_id(self):
+        if not self.lista:
+            return 1
+
+        return max(contato["id"] for contato in self.lista) + 1
+
+    def gerar_telefone(self):
+        telefone = "".join(str(randint(0, 9))for _ in range(9))
+
+        return telefone
+
+    def criar_contato(self):
+        nome = input("Nome: ")
+        email = choice(self.variantes_email)
+        telefone = self.gerar_telefone()
+        contato = {
+            "id": self.gerar_id(),
+            "nome": nome,
+            "email": email,
+            "telefone": telefone
+        }
+
+        self.lista.append(contato)
+        self.salvar_json()
+
+        print("\nContato criado com sucesso!")
+
+    def exibir_contatos(self):
+        if not self.lista:
+            print("\nNenhum contato cadastrado.")
+            return
+
+        print("\n--- CONTATOS ---")
+
+        for contato in self.lista:
+            print(f'\nID: {contato['id']} Nome: {contato['nome']} -> Telefone: {contato['telefone']}\nEmail:{contato['email']}')
+
+    def buscar_contato(self, id_contato):
+        for contato in self.lista:
+            if contato["id"] == id_contato:
+                return contato
+
+        return None
+
+    def remover_contato(self):
+        try:
+            id_contato = int(input("Digite o ID que deseja remover: "))
+
+        except ValueError:
+            print("Digite um ID válido.")
+            return
+
+        contato = self.buscar_contato(id_contato)
+
+        if contato is None:
+            print("Contato não encontrado.")
+            return
+
+        self.lista.remove(contato)
+        self.salvar_json()
+
+        print("Contato removido com sucesso!")
+
+    def editar_contato(self):
+        try:
+            id_contato = int(input("Digite o ID que deseja editar: "))
+
+        except ValueError:
+            print("Digite um ID válido.")
+            return
+
+        contato = self.buscar_contato(id_contato)
+
+        if contato is None:
+            print("Contato não encontrado.")
+            return
+
+        print("\nDeixe vazio para não alterar.")
+
+        novo_nome = input(f"Nome [{contato['nome']}]: ")
+        novo_email = input(f"Email [{contato['email']}]: ")
+        novo_telefone = input(f"Telefone [{contato['telefone']}]: ")
+        if novo_nome:
+            contato["nome"] = novo_nome
+
+        if novo_email:
+            contato["email"] = novo_email
+
+        if novo_telefone:
+            contato["telefone"] = novo_telefone
+
+        self.salvar_json()
+
+        print("Contato atualizado com sucesso!")
+
+
+    def iniciar(self):
+        while True:
+            print("""
+=========================
+     AGENDA DE CONTATOS
+=========================
+
+1 - Criar contato
+2 - Exibir contatos
+3 - Editar contato
+4 - Remover contato
+0 - Sair
+""")
+
+            opcao = input("Escolha uma opção: ")
+
+            if opcao == "1":
+                self.criar_contato()
+
+            elif opcao == "2":
+                self.exibir_contatos()
+
+            elif opcao == "3":
+                self.editar_contato()
+
+            elif opcao == "4":
+                self.remover_contato()
+
+            elif opcao == "0":
+                print("Programa encerrado.")
+                break
+
+            else:
+                print("Opção inválida.")
+                continue
 
 def main():
-    telefone = Agenda()
+    ag = Agenda()
 
-    while True:
-        print('-' * 10)
-        print('Menu do Programa')
-        print('-'*10)
-        print('1.Criar')
-        print('2.Salvar')
-        print('3.Exibir')
-        print('4.Buscar')
-        print('5.Remover')
-        print('0.Sair')
-        escolha = input('\nEscolha:')
-        match escolha:
-            case '1':
-                telefone.criarcontato()
-            case '2':
-                telefone.salvar()
-            case '3':
-                telefone.exibir()
-            case '4':
-                telefone.buscar()
-            case '5':
-                telefone.remover()
-            case '0':
-                print('Saindo do programa')
-                break
-            case _:
-                print('volte ao começo do menu')
-                continue
-if __name__ == '__main__':
+    ag.iniciar()
+
+if __name__ == "__main__":
     main()
